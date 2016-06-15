@@ -1,7 +1,13 @@
 <link rel="import" href="../polymer/polymer.html">
 <dom-module id="mharj-temperature">
-	<link rel="import" type="css" href="mharj-temperature.css">
 	<template>
+		<style>
+		:host {}
+		svg {
+  			width: inherit;
+  			height: inherit;
+		}
+		</style>
 		<svg xmlns='http://www.w3.org/2000/svg' viewBox="0 0 220 700">
 			<defs>
 				<linearGradient id="lgrad_{{color_id}}" x1="0%" y1="0%" x2="100%" y2="0%">
