@@ -1,0 +1,136 @@
+<link rel="import" href="../polymer/polymer.html">
+<dom-module id="mharj-temperature">
+	<template>
+		<style>
+		:host {
+		}
+		svg {
+			width: inherit;
+			height: inherit;
+		}
+		</style>
+		<svg xmlns='http://www.w3.org/2000/svg' viewBox="0 0 220 700">
+			<defs>
+				<linearGradient id="lgrad_{{color_id}}" x1="0%" y1="0%" x2="100%" y2="0%">
+					<stop offset="0%" style$="{{bar_low_color}}" />
+					<stop offset="33%" style$="{{bar_high_color}}" />
+					<stop offset="55%" style="stop-color:rgb(255,255,255)" />
+					<stop offset="77%" style$="{{bar_high_color}}" />
+					<stop offset="100%" style$="{{bar_low_color}}" />
+				</linearGradient>
+				<radialGradient id="rgrad_{{color_id}}" cx="50%" cy="50%" r="50%" fx="33%" fy="33%">
+					<stop offset="0%" style="stop-color:rgb(255,255,255)" />
+					<stop offset="50%" style$="{{bar_high_color}}" />
+					<stop offset="100%" style$="{{bar_low_color}}" />
+				</radialGradient>
+			</defs>
+			<g transform="translate(75 550) rotate(180,34,15) ">
+				<rect x="0" y="0" rx="10" ry="10" width="68" height$='{{bar_size}}' fill$="{{lfill}}" />
+			</g>
+			<g transform="translate(-178.237 6.584)">
+				<circle cx="288" cy="585.947" r="75" fill$="{{rfill}}"/>
+				<path class="meter-border" stroke="#000" stroke-width="10" stroke-linecap="round" d="M290 30h28M290 50h28M290 70h28M290 90h28M290 110h28M290 130h28M290 150h28M290 170h28M290 190h28M290 210h28M290 230h28M290 250h28M290 270h28M290 290h28M290 310h28M290 330h28M290 350h28M290 370h28M290 390h28M290 410h28M290 430h28M290 450h28M290 470h28M290 490h28M290 510h28"/>
+				<path class="meter-border" stroke-width="0" d="M350.265 502.446V46.35c0-28.593-21.372-46.35-55.78-46.35h-10.354c-34.798 0-58.178 18.628-58.178 46.35v456.095c-25.037 18.89-41.25 48.88-41.25 82.588 0 57.018 46.388 103.406 103.407 103.406 57.018 0 103.407-46.39 103.407-103.407 0-33.708-16.215-63.7-41.252-82.587zm-62.157 175.996c-51.588 0-93.408-41.82-93.408-93.408 0-27.717 12.077-52.61 31.25-69.717 3.02-2.693 6.212-5.195 9.563-7.482V46.35c0-27.158 26.182-36.788 48.605-36.788h10.356c10.844 0 46.225 2.65 46.225 36.787v461.484c3.35 2.287 6.543 4.79 9.56 7.482 19.175 17.105 31.252 42 31.252 69.717.005 51.588-41.816 93.41-93.404 93.41z"/>
+			</g>
+			<g font-weight="bold" font-family="'Arial Black', 'Arial Bold', Gadget, sans-serif" font-size="28" stroke="#fff" fill="#000" transform="translate(70 47)" >
+				<text style="text-anchor: right;">30</text>
+				<text style="text-anchor: right;" y="80" >20</text>
+				<text style="text-anchor: right;" y="160">10</text>
+				<text style="text-anchor: right;" x="18" y="240">0</text>
+				<text style="text-anchor: right;" x="-10" y="320">-10</text>
+				<text style="text-anchor: right;" x="-10" y="400">-20</text>
+				<text style="text-anchor: right;" x="-10" y="480">-30</text>
+			</g>
+			<g font-family="'Arial Black', 'Arial Bold', Gadget, sans-serif" font-size="48" stroke="#fff" fill="#000">
+				<text x="40" y="563" transform="translate(70 47)" style="text-anchor: middle;">{{value}}°C</text>
+			</g>
+		</svg>
+	</template>
+	<script>
+		Polymer({
+			is: "mharj-temperature",
+			properties: {
+				id: String,
+				name: String,
+				value: {
+					type: Number,
+					value: 0,
+					readOnly: false,
+					notify: true					
+				},
+				bar_size: {
+					type: String,
+					value: "0",
+					readOnly: false,
+					notify: true					
+				},
+				bar_color: {
+					type: String,
+					value: "black",
+					readOnly: false,
+					notify: true					
+				},
+				bar_high_color: {
+					type: String,
+					value: "black",
+					readOnly: false,
+					notify: true					
+				},
+				bar_low_color: {
+					type: String,
+					value: "black",
+					readOnly: false,
+					notify: true					
+				},
+				color_id: {
+					type: Number,
+					value: 0,
+					readOnly: false,
+					notify: true					
+				},
+				lfill: {
+					type: String,
+					value: "black",
+					readOnly: false,
+					notify: true					
+				},
+				rfill: {
+					type: String,
+					value: "black",
+					readOnly: false,
+					notify: true					
+				}
+			},observers: [
+				'updateTemp(value)'
+			],
+			attached: function() {
+			},
+			detached: function() {
+			},
+			updateTemp: function() {
+				var multi = (480/60);
+				var color_multi = (255/60);
+				this.bar_size = (this.value+30)*multi+65;
+				var c_value = Math.round( (this.value+30)*color_multi );
+				var red = Math.round(c_value*2);
+				var green = (c_value<128?Math.round(c_value*2):255-(Math.round(c_value*2)-255));
+				var blue = 255-(c_value*2);
+				if ( red >  255) {
+					red = 255;
+				}
+				if ( green >  255) {
+					green = 255;
+				}
+				if ( blue >  255) {
+					blue = 255;
+				}
+				this.color_id = c_value;
+				this.bar_color = "rgb("+red+","+green+","+blue+")";
+				this.bar_high_color = "stop-color:rgb("+red+","+green+","+blue+")";
+				this.bar_low_color = "stop-color:rgb("+Math.round(red/3)+","+Math.round(green/3)+","+Math.round(blue/3)+")";
+				this.lfill = "url(#lgrad_"+c_value+")";
+				this.rfill = "url(#rgrad_"+c_value+")";
+			}
+		});
+	</script>
+</dom-module>
