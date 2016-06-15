@@ -13,3 +13,7 @@ Temperature Web element
 ```javascript
   element.value = 20;
 ```
+### Html
+```html
+  <mharj-temperature style='height: 200px' value='-30'></mharj-temperature>
+```
